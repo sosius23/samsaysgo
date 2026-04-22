@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sam Says Go! — Your Friend in Every City</title>
+
+<!-- Meta description -->
+<meta name="description" content="Not a directory. Not crowdsourced. Sam's personal, hand-picked guide to San Francisco — delivered as a tailored day-by-day itinerary just for you.">
+
+<!-- Open Graph (iMessage, Slack, Twitter, etc.) -->
+<meta property="og:title" content="Sam Says Go!">
+<meta property="og:description" content="Your friend in every city. Sam's hand-picked guide to San Francisco — tell me about your trip and I'll build your itinerary.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://samsaysgo.com/og-image.png">
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sam Says Go!">
+<meta name="twitter:description" content="Not a directory. Not crowdsourced. One person's guide to San Francisco.">
+
+<!-- Favicon: SG crest as inline SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%23F0EDE6'/><circle cx='32' cy='32' r='26' fill='none' stroke='%235C5A4E' stroke-width='2.5'/><text x='32' y='39' font-family='Georgia,serif' font-size='20' font-weight='600' fill='%235C5A4E' text-anchor='middle'>SG</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --dark:#2C2B26; --mid:#5C5A4E; --accent:#9E7B5A; --muted:#7A776B;
+  --light:#A8A49A; --border:#D6D1C4; --surface:#FAF8F3; --page:#F0EDE6;
+  --sand:#F0ECE3; --pillsel:#F5EEE3; --card:#FFFFFF;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;
+}
+body { background:var(--page); min-height:100vh; display:flex; justify-content:center; padding:40px 20px; font-family:var(--sans); color:var(--dark); }
+#root { max-width:680px; width:100%; }
+.app { background:var(--surface); border:0.5px solid var(--border); border-radius:12px; overflow:hidden; }
+
+/* NAV */
+.nav { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:0.5px solid var(--border); }
+.nav-brand { display:flex; align-items:center; gap:10px; cursor:pointer; }
+.crest { width:36px; height:36px; border:1.5px solid var(--mid); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:14px; font-weight:600; color:var(--mid); letter-spacing:-0.5px; flex-shrink:0; }
+.brand-name { font-family:var(--serif); font-size:15px; color:#3B3A34; letter-spacing:0.5px; }
+.nav-links { display:flex; gap:20px; }
+.nav-links button { background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; font-family:var(--sans); transition:color 0.2s; padding:0; }
+.nav-links button:hover { color:var(--mid); }
+.nav-counter { font-size:12px; color:var(--light); }
+
+/* ORNAMENT */
+.ornament { display:flex; align-items:center; gap:16px; padding:8px 40px; }
+.orn-line { flex:1; height:0.5px; background:var(--border); }
+.orn-star { font-family:var(--serif); font-size:14px; color:var(--border); line-height:1; }
+
+/* PROGRESS */
+.progress-track { height:2px; background:#E8E4DA; }
+.progress-fill  { height:2px; background:var(--accent); transition:width 0.35s ease; }
+
+/* BUTTONS */
+.btn-cta { background:var(--mid); color:var(--surface); border:none; padding:12px 36px; border-radius:6px; font-family:var(--sans); font-size:14px; letter-spacing:0.3px; cursor:pointer; transition:background 0.2s; }
+.btn-cta:hover { background:#4A4840; }
+.btn-ghost { background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; font-family:var(--sans); padding:0; transition:color 0.2s; }
+.btn-ghost:hover { color:var(--dark); }
+.btn-outline { background:none; border:0.5px solid var(--border); color:var(--mid); padding:10px 24px; border-radius:6px; font-size:13px; cursor:pointer; font-family:var(--sans); transition:border-color 0.2s,color 0.2s; }
+.btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+
+/* EYEBROW */
+.eyebrow { font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--accent); font-family:var(--sans); display:block; }
+
+/* TAG */
+.tag { font-size:10px; color:var(--muted); background:var(--sand); padding:2px 8px; border-radius:3px; font-family:var(--sans); white-space:nowrap; }
+
+/* ── HOMEPAGE ── */
+.hero { padding:60px 40px 48px; text-align:center; }
+.hero .eyebrow { margin-bottom:16px; }
+.hero h1 { font-family:var(--serif); font-size:38px; font-weight:400; color:var(--dark); margin-bottom:14px; line-height:1.15; }
+.hero-sub { font-family:var(--serif); font-size:17px; color:var(--muted); font-style:italic; margin-bottom:36px; line-height:1.6; }
+.hero-cta { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.hero-note { font-size:12px; color:var(--light); }
+.how-section { padding:32px 40px 28px; }
+.how-section h2 { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--dark); margin-bottom:24px; text-align:center; }
+.steps { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+.step { text-align:center; }
+.step-num   { font-family:var(--serif); font-size:22px; color:var(--accent); margin-bottom:10px; font-style:italic; }
+.step-title { font-size:13px; font-weight:600; color:var(--dark); margin-bottom:6px; }
+.step-desc  { font-size:12px; color:var(--muted); line-height:1.55; }
+.feat-section { padding:0 40px 40px; }
+.feat-section h2 { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--dark); margin-bottom:20px; text-align:center; }
+.feat-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.feat-card { border:0.5px solid var(--border); border-radius:8px; background:var(--card); overflow:hidden; cursor:pointer; transition:box-shadow 0.2s; }
+.feat-card:hover { box-shadow:0 2px 12px rgba(60,56,44,0.1); }
+.feat-photo { height:90px; display:flex; align-items:center; justify-content:center; font-size:28px; }
+.feat-info  { padding:10px 12px 12px; }
+.feat-name  { font-family:var(--serif); font-size:14px; color:var(--dark); margin-bottom:4px; line-height:1.3; }
+.feat-meta  { font-size:11px; color:var(--light); margin-bottom:6px; }
+.feat-snip  { font-family:var(--serif); font-size:12px; color:var(--muted); font-style:italic; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.footer { padding:24px 40px; border-top:0.5px solid var(--border); text-align:center; }
+.footer p { font-family:var(--serif); font-size:13px; color:var(--light); font-style:italic; }
+
+/* ── QUIZ ── */
+.q-header { padding:48px 40px 20px; text-align:center; }
+.q-header .eyebrow { margin-bottom:14px; }
+.q-heading { font-family:var(--serif); font-size:26px; font-weight:400; color:var(--dark); margin-bottom:8px; line-height:1.25; }
+.q-sub { font-family:var(--serif); font-size:15px; color:var(--light); font-style:italic; }
+.options { padding:0 40px 16px; display:flex; flex-direction:column; gap:10px; }
+.opt-card { border:0.5px solid var(--border); border-radius:8px; padding:14px 18px; background:var(--card); display:flex; align-items:center; gap:14px; cursor:pointer; transition:border-color 0.15s,box-shadow 0.15s; }
+.opt-card:hover { border-color:#C4BFB2; box-shadow:0 1px 6px rgba(60,56,44,0.05); }
+.opt-card.selected { border:1.5px solid var(--accent); }
+.radio { width:20px; height:20px; border:1.5px solid #C4BFB2; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:border-color 0.15s; }
+.radio.on { border-color:var(--accent); }
+.radio-dot { width:10px; height:10px; border-radius:50%; background:var(--accent); }
+.opt-label { font-size:14px; color:var(--dark); font-weight:500; }
+.opt-desc  { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+.pills-wrap { padding:0 40px 16px; display:flex; flex-wrap:wrap; gap:8px; }
+.pill { padding:8px 18px; border-radius:20px; border:0.5px solid var(--border); background:var(--card); font-size:13px; color:var(--dark); cursor:pointer; transition:border-color 0.15s,background 0.15s; font-family:var(--sans); }
+.pill:hover { border-color:#C4BFB2; }
+.pill.on { border:1.5px solid var(--accent); background:var(--pillsel); color:var(--mid); }
+.quiz-nav { display:flex; justify-content:space-between; align-items:center; padding:20px 40px 36px; }
+
+/* ── ITINERARY ── */
+.itin-header { padding:40px 40px 32px; }
+.itin-header .eyebrow { margin-bottom:10px; }
+.itin-title { font-family:var(--serif); font-size:30px; font-weight:400; color:var(--dark); margin-bottom:10px; line-height:1.2; }
+.itin-meta  { font-size:12px; color:var(--light); display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.itin-dot   { color:var(--border); }
+.day-section { padding:0 40px 8px; }
+.day-header  { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--dark); margin-bottom:8px; }
+.day-intro   { font-family:var(--serif); font-size:14px; color:var(--muted); font-style:italic; line-height:1.6; margin-bottom:20px; }
+.time-label  { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:12px; font-family:var(--sans); }
+.place-card  { display:flex; border:0.5px solid var(--border); border-radius:8px; background:var(--card); overflow:hidden; margin-bottom:12px; transition:box-shadow 0.2s; }
+.place-card:hover { box-shadow:0 2px 12px rgba(60,56,44,0.06); }
+.place-photo { width:130px; min-height:150px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:36px; position:relative; }
+.place-badge { position:absolute; top:8px; left:8px; background:rgba(250,248,243,0.92); padding:2px 8px; border-radius:3px; font-size:10px; color:var(--muted); font-family:var(--sans); }
+.place-body  { padding:14px 18px; flex:1; min-width:0; }
+.place-top   { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px; }
+.place-name  { font-family:var(--serif); font-size:16px; color:var(--dark); line-height:1.3; }
+.place-price { font-size:11px; color:var(--light); flex-shrink:0; margin-left:8px; margin-top:2px; }
+.place-meta  { font-size:11px; color:var(--light); margin-bottom:10px; }
+.place-copy  { font-family:var(--serif); font-size:13px; color:var(--mid); line-height:1.55; margin-bottom:10px; }
+.place-acts  { display:flex; gap:14px; font-size:11px; align-items:center; }
+.place-acts a { color:var(--accent); text-decoration:none; transition:color 0.15s; }
+.place-acts a:hover { color:#7A5E3E; }
+.place-acts .dot { color:var(--border); }
+.transit     { font-family:var(--serif); font-size:12px; font-style:italic; color:var(--light); padding:8px 20px; border-left:1.5px solid #E8E4DA; margin:2px 0 2px 16px; }
+.itin-footer { padding:32px 40px 40px; text-align:center; border-top:0.5px solid var(--border); margin-top:16px; }
+.itin-footer p { font-family:var(--serif); font-size:14px; color:var(--muted); font-style:italic; margin-bottom:20px; line-height:1.6; }
+.itin-acts   { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+/* ── BROWSE ── */
+.browse-hdr { padding:40px 40px 24px; }
+.browse-hdr .eyebrow { margin-bottom:8px; }
+.browse-hdr h2 { font-family:var(--serif); font-size:26px; font-weight:400; color:var(--dark); margin-bottom:4px; }
+.browse-hdr p  { font-size:13px; color:var(--muted); }
+.search-wrap { padding:0 40px 12px; }
+.search-wrap input { width:100%; padding:10px 16px; border:0.5px solid var(--border); border-radius:8px; background:var(--card); font-family:var(--sans); font-size:13px; color:var(--dark); outline:none; transition:border-color 0.2s; }
+.search-wrap input:focus { border-color:var(--accent); }
+.search-wrap input::placeholder { color:var(--light); }
+.filter-row { padding:0 40px 16px; display:flex; gap:8px; flex-wrap:wrap; }
+.fpill { padding:5px 14px; border-radius:20px; border:0.5px solid var(--border); background:var(--card); font-size:12px; color:var(--muted); cursor:pointer; transition:all 0.15s; font-family:var(--sans); }
+.fpill:hover { border-color:#C4BFB2; }
+.fpill.on { border:1.5px solid var(--accent); background:var(--pillsel); color:var(--mid); }
+.browse-list { padding:0 40px 40px; display:flex; flex-direction:column; gap:10px; }
+.b-card  { display:flex; border:0.5px solid var(--border); border-radius:8px; background:var(--card); overflow:hidden; transition:box-shadow 0.2s; }
+.b-card:hover { box-shadow:0 2px 8px rgba(60,56,44,0.06); }
+.b-emoji { width:70px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+.b-info  { padding:12px 16px; flex:1; min-width:0; }
+.b-name  { font-family:var(--serif); font-size:15px; color:var(--dark); margin-bottom:2px; }
+.b-hood  { font-size:11px; color:var(--light); margin-bottom:6px; }
+.b-snip  { font-family:var(--serif); font-size:12px; color:var(--muted); font-style:italic; line-height:1.45; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.b-right { padding:12px 14px; display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between; flex-shrink:0; gap:8px; }
+.b-rating { font-size:11px; color:var(--muted); }
+.b-dir   { font-size:11px; color:var(--accent); text-decoration:none; }
+.b-dir:hover { color:#7A5E3E; }
+.empty { text-align:center; padding:48px; color:var(--light); font-family:var(--serif); font-style:italic; }
+
+@media(max-width:520px){
+  body { padding:0; }
+  .app { border-radius:0; border-left:none; border-right:none; }
+  .hero { padding:40px 20px 36px; }
+  .hero h1 { font-size:30px; }
+  .ornament,.day-section,.q-header,.options,.pills-wrap,.quiz-nav,
+  .itin-header,.itin-footer,.browse-hdr,.search-wrap,.filter-row,
+  .browse-list,.footer,.how-section,.feat-section { padding-left:20px; padding-right:20px; }
+  .steps { grid-template-columns:1fr; gap:16px; }
+  .feat-grid { grid-template-columns:1fr; }
+  .place-card { flex-direction:column; }
+  .place-photo { width:100%; height:130px; min-height:unset; }
+  .b-card { flex-direction:column; }
+  .b-emoji { width:100%; height:60px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════
+// ALL 87 PLACES
+// ══════════════════════════════════════════════════
+const PLACES = [{"id":"radhaus","name":"Radhaus","category":"Bar","subcategory":"Beer hall","neighborhood":"Fort Mason","priceRange":"$20-30","googleRating":4.4,"reviewCount":1590,"samCommentary":"Good German beer house in an old military base on the water. Really good pretzel."},{"id":"sfmoma","name":"San Francisco Museum of Modern Art","category":"Museum","subcategory":"Modern art museum","neighborhood":"SoMa","priceRange":"$20-30","googleRating":4.6,"reviewCount":16325,"samCommentary":"Worth a visit. Pretty cheap tickets."},{"id":"pinecrest-diner","name":"Pinecrest Diner","category":"Restaurant","subcategory":"Diner","neighborhood":"Union Square","priceRange":"$20-30","googleRating":4.2,"reviewCount":4719,"samCommentary":"Delicious old school 24h eatery. Probably will see some interesting characters late at night here, be warned."},{"id":"irish-times","name":"Irish Times","category":"Bar","subcategory":"Irish pub","neighborhood":"Financial District","priceRange":"$20-30","googleRating":4.3,"reviewCount":1121,"samCommentary":"Killer Irish bar, super cheap, always open. Hidden in an alley."},{"id":"salesforce-park","name":"Salesforce Park","category":"Park","subcategory":"Park","neighborhood":"SoMa","priceRange":"$1-10","googleRating":4.8,"reviewCount":4748,"samCommentary":"Super wacky corporate park elevated above the city. Lowkey kinda interesting."},{"id":"herons-head-park","name":"Heron's Head Park","category":"Park","subcategory":"Nature preserve","neighborhood":"Bayview","priceRange":"$1-10","googleRating":4.7,"reviewCount":25,"samCommentary":"Hidden nature spot way out by the shipyards. Great for birdwatching and a quiet walk into the bay. Not many people know about it."},{"id":"lands-end-trail","name":"Lands End Trail","category":"Park","subcategory":"Hiking area","neighborhood":"Outer Richmond","priceRange":"$1-10","googleRating":4.9,"reviewCount":281,"samCommentary":"A really good little hike along dramatic coastline."},{"id":"sf-city-hall","name":"San Francisco City Hall","category":"Landmark","subcategory":"City Hall","neighborhood":"Civic Center","priceRange":"$1-10","googleRating":4.6,"reviewCount":1732,"samCommentary":"Often mistaken for the California state capitol building this monster of a city hall is worth a look."},{"id":"oracle-park","name":"Oracle Park","category":"Activity","subcategory":"Stadium","neighborhood":"SoMa","priceRange":"$20-30","googleRating":4.7,"reviewCount":31446,"samCommentary":"Like the best ballpark in the world. No seat is a bad seat. Food and drink is expensive but tickets usually are not bad."},{"id":"hi-dive-bar","name":"Hi Dive Bar","category":"Bar","subcategory":"Grill","neighborhood":"South Beach","priceRange":"$20-30","googleRating":4.4,"reviewCount":1356,"samCommentary":"For bay views and a drink this is a good spot."},{"id":"reds-java-house","name":"Red's Java House","category":"Restaurant","subcategory":"Hamburger","neighborhood":"South Beach","priceRange":"$10-20","googleRating":4.4,"reviewCount":1205,"samCommentary":"Great outdoor seating area, great prices, super solid food and drink."},{"id":"exploratorium","name":"Exploratorium","category":"Museum","subcategory":"Science museum","neighborhood":"Embarcadero","priceRange":"$20-30","googleRating":4.7,"reviewCount":8438,"samCommentary":"Lucy works here! Totally worth a visit. You can easily spend a couple of hours in here. Super interactive."},{"id":"ss-jeremiah-obrien","name":"SS Jeremiah O'Brien","category":"Museum","subcategory":"Maritime museum","neighborhood":"Fisherman's Wharf","priceRange":"$10-20","googleRating":4.7,"reviewCount":1477,"samCommentary":"This ship won the Second World War. The United States made one every 4 days. The history is staggering."},{"id":"sea-lion-viewing","name":"Sea Lion Viewing Area","category":"Activity","subcategory":"Tourist attraction","neighborhood":"Fisherman's Wharf","priceRange":"$1-10","googleRating":4.7,"reviewCount":6161,"samCommentary":"You have to see the Sea Lions! Come on."},{"id":"taco-bell-cantina","name":"Taco Bell Cantina","category":"Restaurant","subcategory":"Fast Food","neighborhood":"Fisherman's Wharf","priceRange":"$10-20","googleRating":3.8,"reviewCount":64,"samCommentary":"If you lived here you would understand why this is on the list."},{"id":"in-n-out-burger","name":"In-N-Out Burger","category":"Restaurant","subcategory":"Hamburger","neighborhood":"Fisherman's Wharf","priceRange":"$1-10","googleRating":4.3,"reviewCount":12541,"samCommentary":"Self explanatory."},{"id":"lombard-street","name":"Lombard Street","category":"Landmark","subcategory":"Landmark","neighborhood":"Russian Hill","priceRange":"$1-10","googleRating":4.6,"reviewCount":35916,"samCommentary":"Touristy but steep as hell. Worth a look."},{"id":"za-pizza","name":"Za Pizza","category":"Restaurant","subcategory":"Pizza","neighborhood":"Russian Hill","priceRange":"$10-20","googleRating":4.6,"reviewCount":1185,"samCommentary":"Cute place, nice staff, solid pies. Worth a stop if you are in the area."},{"id":"swensens","name":"Swensen's","category":"Restaurant","subcategory":"Ice Cream","neighborhood":"Russian Hill","priceRange":"$1-10","googleRating":4.6,"reviewCount":1085,"samCommentary":"Best ice cream in the city. I think. Worth a trek. Sam Altman lives nearby."},{"id":"shanghai-kellys","name":"Shanghai Kelly's","category":"Bar","subcategory":"Sports bar","neighborhood":"Russian Hill","priceRange":"$10-20","googleRating":4.4,"reviewCount":315,"samCommentary":"PACKED on a Friday or Saturday night. But during the day it's an amazing neighborhood bar with friendly staff and cheap drinks."},{"id":"castro-theatre","name":"The Castro Theatre","category":"Activity","subcategory":"Movie theater","neighborhood":"The Castro","priceRange":"$20-30","googleRating":4.7,"reviewCount":2624,"samCommentary":"An incredibly beautiful Movie Palace intricately restored to its original glory. Catch a movie or live performance here."},{"id":"loards-ice-cream","name":"Loard's Ice Cream","category":"Restaurant","subcategory":"Ice Cream","neighborhood":"Dogpatch","priceRange":"$1-10","googleRating":4.6,"reviewCount":102,"samCommentary":"So cute, great ice cream. Small town feel. Views of the city from the hill are awesome."},{"id":"arsicault-bakery","name":"Arsicault Bakery","category":"Cafe","subcategory":"Bakery","neighborhood":"Polk Gulch","priceRange":"$10-20","googleRating":4.6,"reviewCount":1089,"samCommentary":"Basically the best croissant money can buy. When I first moved here I had one every day for a month on my way to work."},{"id":"visa-mission-rock","name":"Visa – Mission Rock","category":"Landmark","subcategory":"Office","neighborhood":"Mission Bay","priceRange":"$1-10","googleRating":3.1,"reviewCount":28,"samCommentary":"I work here. Cute little park around it, great views of the bay and a little brewery outpost in front."},{"id":"spicy-cloud","name":"Spicy & Cloud","category":"Restaurant","subcategory":"Chinese","neighborhood":"Chinatown","priceRange":"$20-30","googleRating":4.6,"reviewCount":199,"samCommentary":"Delicious and cheap cute little basement restaurant."},{"id":"old-ship-saloon","name":"The Old Ship Saloon","category":"Bar","subcategory":"Bar","neighborhood":"Jackson Square","priceRange":"$20-30","googleRating":4.5,"reviewCount":896,"samCommentary":"FiDi was built on land infill that buried abandoned ships! This bar is one of the oldest in town and used to be within a docked ship itself."},{"id":"pink-onion","name":"Pink Onion","category":"Restaurant","subcategory":"Southern Italian","neighborhood":"Duboce Triangle","priceRange":"$20-30","googleRating":4.4,"reviewCount":838,"samCommentary":"Very tasty. Small and popular restaurant, reservations highly recommended."},{"id":"grubstake-diner","name":"Grubstake Diner","category":"Restaurant","subcategory":"Diner","neighborhood":"Polk Gulch","priceRange":"$20-30","googleRating":4.1,"reviewCount":1162,"samCommentary":"Open late. Incredible food and staff. Inside an old train car."},{"id":"hi-lo-club","name":"Hi-Lo Club","category":"Bar","subcategory":"Bar","neighborhood":"Polk Gulch","priceRange":"$10-20","googleRating":4.5,"reviewCount":335,"samCommentary":"Right in my neighborhood. Live music Wednesdays. Amazing cocktails and vibes. More lowkey with dim lighting."},{"id":"cordon-bleu-vietnamese","name":"Cordon Bleu Vietnamese","category":"Restaurant","subcategory":"Vietnamese","neighborhood":"Polk Gulch","priceRange":"$10-20","googleRating":4.6,"reviewCount":564,"samCommentary":"A CLASSIC. Cash only. Very small inside and very popular."},{"id":"goldenette","name":"Goldenette","category":"Restaurant","subcategory":"Restaurant","neighborhood":"Polk Gulch","priceRange":"$20-30","googleRating":4.4,"reviewCount":29,"samCommentary":"The new spot on the block! Instagram famous and delicious."},{"id":"donuts-and-things","name":"Donuts & Things","category":"Cafe","subcategory":"Donuts","neighborhood":"Polk Gulch","priceRange":"$1-10","googleRating":4.6,"reviewCount":154,"samCommentary":"I eat lunch here every Monday with Lucy. Food and donuts are amazing. Staff will treat you like family."},{"id":"karam","name":"Karam","category":"Restaurant","subcategory":"Mediterranean","neighborhood":"Polk Gulch","priceRange":"$20-30","googleRating":4.7,"reviewCount":180,"samCommentary":"WOW. Get the shawarma arabic style."},{"id":"bite","name":"Bite","category":"Restaurant","subcategory":"Sandwich","neighborhood":"Lower Nob Hill","priceRange":"$10-20","googleRating":4.5,"reviewCount":558,"samCommentary":"Open late. Cheap. No seating. Incredible massive sandwiches."},{"id":"starry-plough-pub","name":"The Starry Plough Pub","category":"Bar","subcategory":"Pub","neighborhood":"Berkeley","priceRange":"$10-20","googleRating":4.6,"reviewCount":802,"samCommentary":"Live music on Saturdays and Sundays. Cheap food and cheap beer."},{"id":"casements-bar","name":"Casements Bar","category":"Bar","subcategory":"Bar","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.7,"reviewCount":433,"samCommentary":"Jukebox is amazing. Fabulous vibes with a huge back patio. Good drinks. Close to tons of cheap eats. Open late."},{"id":"kolapasi","name":"Kolapasi South Indian Cuisine","category":"Restaurant","subcategory":"South Indian","neighborhood":"The Mission","priceRange":"$20-30","googleRating":4.7,"reviewCount":324,"samCommentary":"Wowowowow. Be warned they don't pull the punches when it comes to spice."},{"id":"dogpatch-saloon","name":"Dogpatch Saloon","category":"Bar","subcategory":"Bar","neighborhood":"Dogpatch","priceRange":"$20-30","googleRating":4.6,"reviewCount":444,"samCommentary":"One of the oldest bars in SF tucked in the increasingly cool Dogpatch. Good beer and a relaxed crowd."},{"id":"standard-deviant-brewing","name":"Standard Deviant Brewing","category":"Bar","subcategory":"Brewery","neighborhood":"Dogpatch","priceRange":"$10-20","googleRating":4.8,"reviewCount":58,"samCommentary":"Chill brewery in Dogpatch with solid craft beers and a nice outdoor space."},{"id":"house-of-nanking","name":"House of Nanking","category":"Restaurant","subcategory":"Chinese","neighborhood":"Chinatown","priceRange":"$20-30","googleRating":4.1,"reviewCount":5153,"samCommentary":"Classic SF Chinese restaurant. Owner will tell you what to order. Just go with it."},{"id":"cable-car-museum","name":"Cable Car Museum","category":"Museum","subcategory":"Rail museum","neighborhood":"Nob Hill","priceRange":"$1-10","googleRating":4.7,"reviewCount":6867,"samCommentary":"Learn how SF's famous cable cars work at this free museum and active cable room."},{"id":"coit-tower","name":"Coit Tower","category":"Landmark","subcategory":"Historical landmark","neighborhood":"Telegraph Hill","priceRange":"$10-20","googleRating":4.6,"reviewCount":15627,"samCommentary":"Classic landmark. Visit for the famous murals at its base and spectacular views from the top."},{"id":"ina-coolbrith-park","name":"Ina Coolbrith Park","category":"Park","subcategory":"City park","neighborhood":"Russian Hill","priceRange":"$1-10","googleRating":4.8,"reviewCount":1633,"samCommentary":"Stunning views of the city and the Bay. Usually quiet. A bit of a hike to get up there."},{"id":"chez-brando","name":"Chez Brando","category":"Bar","subcategory":"Wine bar","neighborhood":"Russian Hill","priceRange":"$20-30","googleRating":5.0,"reviewCount":66,"samCommentary":"Genuinely French. Order in French to get some points with the staff. Get some cheese, have some wine and enjoy."},{"id":"propagation","name":"Propagation","category":"Bar","subcategory":"Bar","neighborhood":"Lower Nob Hill","priceRange":"$10-20","googleRating":4.7,"reviewCount":253,"samCommentary":"Incredible plant vibes."},{"id":"bernal-heights-park","name":"Bernal Heights Park","category":"Park","subcategory":"City park","neighborhood":"Bernal Heights","priceRange":"$1-10","googleRating":4.8,"reviewCount":143,"samCommentary":"Come here just before sunset for incredible 360 degree views of the city and the bay."},{"id":"the-homestead","name":"The Homestead","category":"Bar","subcategory":"Bar","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.4,"reviewCount":342,"samCommentary":"Lowkey historic bar. Slightly sketchy area. Great cheap drinks."},{"id":"mauna-loa-club","name":"Mauna Loa Club","category":"Bar","subcategory":"Bar","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.3,"reviewCount":201,"samCommentary":"Dive with sometimes open back patio and arcade games + pool. Cute and historic."},{"id":"the-riptide","name":"The Riptide","category":"Bar","subcategory":"Bar","neighborhood":"Outer Sunset","priceRange":"$10-20","googleRating":4.6,"reviewCount":471,"samCommentary":"Cozy local spot. Lovely real fireplace. Welcoming. Cash preferred."},{"id":"house-of-shields","name":"The House of Shields","category":"Bar","subcategory":"Bar","neighborhood":"SoMa","priceRange":"$10-20","googleRating":4.5,"reviewCount":533,"samCommentary":"Been around since 1908. Dark wood, classic cocktails, no TVs, no nonsense. A proper grown-up bar near the Embarcadero."},{"id":"house-of-prime-rib","name":"House of Prime Rib","category":"Restaurant","subcategory":"American","neighborhood":"Nob Hill","priceRange":"$100+","googleRating":4.7,"reviewCount":7198,"samCommentary":"THE splurge dinner in SF. They wheel a massive cart of prime rib to your table and carve it right there. Book way in advance."},{"id":"collina","name":"Collina","category":"Restaurant","subcategory":"Italian","neighborhood":"North Beach","priceRange":"$20-30","googleRating":4.8,"reviewCount":169,"samCommentary":"Tiny Italian gem in North Beach. Incredible pasta and warm service. That 4.8 rating is no joke."},{"id":"pakwan-restaurant","name":"Pakwan Restaurant","category":"Restaurant","subcategory":"Pakistani","neighborhood":"The Mission","priceRange":"$20-30","googleRating":4.3,"reviewCount":1906,"samCommentary":"Brilliantly cheap eats."},{"id":"kilowatt-bar","name":"Kilowatt Bar","category":"Bar","subcategory":"Bar","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.4,"reviewCount":505,"samCommentary":"Grungy fratty dive."},{"id":"phone-booth","name":"Phone Booth","category":"Bar","subcategory":"Bar","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.3,"reviewCount":246,"samCommentary":"Cash only! Amazing CD jukebox."},{"id":"el-gallo-giro","name":"El Gallo Giro Food Truck","category":"Restaurant","subcategory":"Mexican","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.8,"reviewCount":180,"samCommentary":"One of the best taco trucks in the Mission. Quick, cheap, and insanely good. The al pastor is a must."},{"id":"taqueria-el-farolito","name":"Taquería El Farolito","category":"Restaurant","subcategory":"Mexican","neighborhood":"The Mission","priceRange":"$10-20","googleRating":4.5,"reviewCount":5614,"samCommentary":"Cash only! Best late-night burrito in the city, full stop."},{"id":"irish-bank","name":"The Irish Bank","category":"Bar","subcategory":"Irish pub","neighborhood":"Financial District","priceRange":"$20-30","googleRating":4.3,"reviewCount":1826,"samCommentary":"Hidden in an actual alley in the Financial District. Great outdoor seating tucked away from the street. Solid pub food and good pints."},{"id":"iron-horse-cocktails","name":"Iron Horse Cocktails","category":"Bar","subcategory":"Cocktail bar","neighborhood":"Lower Nob Hill","priceRange":"$10-20","googleRating":4.5,"reviewCount":412,"samCommentary":"Solid cocktail bar that doesn't charge you $18 a drink. Chill vibes and friendly bartenders."},{"id":"social-study","name":"The Social Study","category":"Cafe","subcategory":"Cafe","neighborhood":"Lower Nob Hill","priceRange":"$10-20","googleRating":4.5,"reviewCount":642,"samCommentary":"Nice little cafe with good coffee and a good space to hang or work. Nothing flashy, which is exactly why it works."},{"id":"vesuvio-cafe","name":"Vesuvio Cafe","category":"Bar","subcategory":"Cocktail bar","neighborhood":"North Beach","priceRange":"$20-30","googleRating":4.6,"reviewCount":1941,"samCommentary":"The Beat Generation drank here. Kerouac, Ginsberg, the whole crew. Right next to City Lights Bookstore so do both."},{"id":"the-saloon","name":"The Saloon","category":"Bar","subcategory":"Bar","neighborhood":"North Beach","priceRange":"$10-20","googleRating":4.6,"reviewCount":1051,"samCommentary":"One of the oldest bars in San Francisco and it feels like it. Live blues most nights. Rowdy, loud, and full of character."},{"id":"stookeys-club-moderne","name":"Stookey's Club Moderne","category":"Bar","subcategory":"Cocktail bar","neighborhood":"Lower Nob Hill","priceRange":"$20-30","googleRating":4.7,"reviewCount":433,"samCommentary":"Stunning art-deco cocktail bar. Feels like stepping into the 1930s. Beautifully crafted drinks and pure class vibes."},{"id":"presidio","name":"Presidio of San Francisco","category":"Park","subcategory":"Park","neighborhood":"Presidio","priceRange":"$1-10","googleRating":4.8,"reviewCount":7294,"samCommentary":"Massive former military base turned national park. Trails, beaches, forests, and some of the best views of the Golden Gate Bridge."},{"id":"muir-woods","name":"Muir Woods National Monument","category":"Landmark","subcategory":"Nature preserve","neighborhood":"Marin County","priceRange":"$10-20","googleRating":4.8,"reviewCount":20148,"samCommentary":"Old-growth redwoods 30 minutes from the city. Cathedral Grove feels like another planet. You MUST book a parking reservation in advance."},{"id":"golden-gate-bridge","name":"Golden Gate Bridge","category":"Landmark","subcategory":"Landmark","neighborhood":"Presidio","priceRange":"$1-10","googleRating":4.6,"reviewCount":5818,"samCommentary":"I mean... it's the Golden Gate Bridge. Walk or bike across if the weather's good. Bring a jacket, it's always windy."},{"id":"alcatraz-island","name":"Alcatraz Island","category":"Landmark","subcategory":"Historical place","neighborhood":"San Francisco Bay","priceRange":"$20-30","googleRating":4.7,"reviewCount":44261,"samCommentary":"The audio tour is one of the best I've ever done. Narrated by former inmates and guards. Book 2-4 weeks ahead — it sells out constantly."},{"id":"arsicault-richmond","name":"Arsicault Bakery (Richmond)","category":"Cafe","subcategory":"Bakery","neighborhood":"Inner Richmond","priceRange":"$10-20","googleRating":4.6,"reviewCount":1089,"samCommentary":"Second location of the famous bakery. Same incredible croissants. Go early before they sell out."},{"id":"bobs-donut","name":"Bob's Donut & Pastry Shop","category":"Cafe","subcategory":"Donuts","neighborhood":"Polk Gulch","priceRange":"$1-10","googleRating":4.6,"reviewCount":4243,"samCommentary":"Open 24 hours. The apple fritter is the size of your head. Perfect late-night stop after the bars."},{"id":"cinch-saloon","name":"The Cinch Saloon","category":"Bar","subcategory":"Gay bar","neighborhood":"Polk Gulch","priceRange":"$10-20","googleRating":4.4,"reviewCount":172,"samCommentary":"One of the oldest gay bars in the city. Cheap drinks, friendly crowd, pool table. Everyone is welcome here."},{"id":"swan-oyster-depot","name":"Swan Oyster Depot","category":"Restaurant","subcategory":"Seafood","neighborhood":"Polk Gulch","priceRange":"$50-100","googleRating":4.6,"reviewCount":2181,"samCommentary":"Legendary 18-seat counter. Yes you'll wait in line. Yes it's worth it. Get there before 10:30am. Cash only."},{"id":"amelie-sf","name":"Amelie San Francisco","category":"Bar","subcategory":"Wine bar","neighborhood":"Polk Gulch","priceRange":"$20-30","googleRating":4.6,"reviewCount":664,"samCommentary":"Romantic little French wine bar. Candlelit, cozy, great for a date night. Cheese and charcuterie boards are solid."},{"id":"owl-tree","name":"Owl Tree","category":"Bar","subcategory":"Cocktail bar","neighborhood":"Lower Nob Hill","priceRange":"$20-30","googleRating":4.5,"reviewCount":634,"samCommentary":"Walk in and look up. The ceiling is covered in owls. Quirky and fun. Bartenders know what they're doing."},{"id":"himalayan-cuisine-sf","name":"Himalayan Cuisine SF","category":"Restaurant","subcategory":"Nepalese","neighborhood":"Inner Richmond","priceRange":"$20-30","googleRating":4.8,"reviewCount":2158,"samCommentary":"Unbelievable Nepalese food tucked away in the Richmond. The momos are outstanding. 4.8 stars for a reason."},{"id":"java-beach-cafe","name":"Java Beach Cafe","category":"Cafe","subcategory":"Cafe","neighborhood":"Outer Sunset","priceRange":"$10-20","googleRating":4.4,"reviewCount":1652,"samCommentary":"Coffee and breakfast right by Ocean Beach. Grab a latte, walk to the beach. Great morning move."},{"id":"mixto-latin-cuisine","name":"Mixto Latin Cuisine","category":"Restaurant","subcategory":"Peruvian","neighborhood":"The Mission","priceRange":"$20-30","googleRating":4.6,"reviewCount":183,"samCommentary":"Really solid Peruvian spot in the Mission. Great ceviche. Nice intimate space and the food punches above its price point."},{"id":"zam-zam","name":"Zam Zam","category":"Bar","subcategory":"Cocktail bar","neighborhood":"Haight-Ashbury","priceRange":"$10-20","googleRating":4.4,"reviewCount":492,"samCommentary":"Cash Only."},{"id":"beach-chalet","name":"Beach Chalet Brewery","category":"Restaurant","subcategory":"New American","neighborhood":"Outer Sunset","priceRange":"$20-30","googleRating":4.1,"reviewCount":3799,"samCommentary":"Go for the ocean views, not the food. Upstairs has gorgeous views of Ocean Beach. Good for a beer after a beach walk."},{"id":"mayaflor","name":"Mayaflor","category":"Restaurant","subcategory":"Restaurant","neighborhood":"The Mission","priceRange":"$20-30","googleRating":4.9,"reviewCount":124,"samCommentary":"Newer spot in the Mission with a 4.9 rating. Small menu done really well. Make a reservation — word is getting out fast."},{"id":"del-popolo","name":"Del Popolo","category":"Restaurant","subcategory":"Pizza","neighborhood":"Polk Gulch","priceRange":"$20-30","googleRating":4.4,"reviewCount":1337,"samCommentary":"Started as a food truck, now one of the best pizza spots in the city. Neapolitan-style, wood-fired. They just do pizza and they do it right."},{"id":"peacekeeper","name":"Peacekeeper","category":"Bar","subcategory":"Bar","neighborhood":"The Mission","priceRange":"$20-30","googleRating":4.5,"reviewCount":517,"samCommentary":"Solid Mission bar with good cocktails that don't break the bank. Nice atmosphere without being too scene-y."},{"id":"zombie-village","name":"The Zombie Village","category":"Bar","subcategory":"Tiki bar","neighborhood":"Lower Nob Hill","priceRange":"$20-30","googleRating":4.6,"reviewCount":600,"samCommentary":"Incredible tiki bar. Has a bouncer so look for them or you might miss it. Good prices."},{"id":"berlin-doner-kebab","name":"Berlin Doner & Kebab House","category":"Restaurant","subcategory":"Restaurant","neighborhood":"The Castro","priceRange":"$10-20","googleRating":4.6,"reviewCount":386,"samCommentary":"Proper Berlin-style doner kebab. Cheap, filling, perfect for late-night or a quick bite between bars."},{"id":"orphan-andys","name":"Orphan Andy's","category":"Restaurant","subcategory":"Diner","neighborhood":"The Castro","priceRange":"$20-30","googleRating":4.5,"reviewCount":2444,"samCommentary":"Charming affordable diner with friendly service and delicious food. Stunning decorations and lighting."}];
+
+// ══════════════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════════════
+const S = { page:'home', step:0, answers:{}, itinerary:null, bFilter:'All', bSearch:'' };
+function go(u) { Object.assign(S, u); mount(); }
+
+// ══════════════════════════════════════════════════
+// QUIZ QUESTIONS
+// ══════════════════════════════════════════════════
+const QS = [
+  {id:'tripLength',ew:'I of VIII',h:'How long is your trip?',s:"We'll pace the itinerary around your time.",t:'single',
+   opts:[{v:'1',l:'1 day',d:'A tight but great day'},{v:'2',l:'2 days',d:'A solid weekend'},{v:'3',l:'3 days',d:'The sweet spot'},{v:'4-5',l:'4–5 days',d:'Really get to know the city'},{v:'6-7',l:'6–7 days',d:'Live like a local'},{v:'1week+',l:'1 week+',d:'The full treatment'}]},
+  {id:'groupType',ew:'II of VIII',h:"Who's coming?",s:'Your crew shapes everything.',t:'single',
+   opts:[{v:'solo',l:'Solo',d:'Flying free'},{v:'couple',l:'Couple',d:"Two's company"},{v:'friends',l:'Friends',d:'The more the merrier'},{v:'family-kids',l:'Family with kids',d:'Adventure for all ages'},{v:'family-adults',l:'Family (adults)',d:'Grown-up adventure'}]},
+  {id:'vibe',ew:'III of VIII',h:"What's your vibe?",s:"There's no wrong answer here.",t:'single',
+   opts:[{v:'touristy',l:'Hit the big sights',d:'Golden Gate, Alcatraz, the classics — I want it all'},{v:'hidden',l:'Off the beaten path',d:'Local gems, hidden spots, no tourist traps'},{v:'both',l:'Best of both',d:'Mix the icons with the hidden gems'}]},
+  {id:'interests',ew:'IV of VIII',h:'What are you into?',s:'Pick everything that sounds good.',t:'multi',
+   opts:['Food & dining','Bars & nightlife','Outdoors & hiking','Arts & culture','Shopping','Live music','History','Photography spots']},
+  {id:'budget',ew:'V of VIII',h:"What's your budget?",s:"Be honest — I'll work with it.",t:'single',
+   opts:[{v:'cheap',l:'Keep it cheap',d:"Dives and cheap eats — that's where the real city is"},{v:'mostly-budget',l:'Mostly budget + a splurge',d:'Save up for one or two special spots'},{v:'mid-range',l:'Comfortable mid-range',d:'Good food without breaking the bank'},{v:'no-limit',l:'Price is no concern',d:'Show me the best of the best'}]},
+  {id:'food',ew:'VI of VIII',h:'Any food preferences?',s:"Pick your favorites — I'll prioritize them.",t:'multi',
+   opts:['Italian','Mexican','Chinese','Vietnamese','Indian','Seafood','American','Mediterranean','Pakistani','Nepalese','Pizza','Ice Cream']},
+  {id:'drinking',ew:'VII of VIII',h:'How do you roll with drinks?',s:'No judgment here.',t:'single',
+   opts:[{v:'love-bars',l:'Love a good bar / cocktails',d:'One of the best parts of traveling'},{v:'social',l:'Social drinker',d:'Happy to join a round or two'},{v:'no-drink',l:"Don't drink",d:"I'll have a sparkling water, thanks"}]},
+  {id:'pace',ew:'VIII of VIII',h:'What pace suits you?',s:'This is your trip.',t:'single',
+   opts:[{v:'packed',l:'Jam-packed',d:"See it all — rest when I'm home"},{v:'balanced',l:'Balanced',d:'Good mix of go-go and breathe'},{v:'relaxed',l:'Relaxed',d:'Linger, sip coffee, wander'}]}
+];
+
+// ══════════════════════════════════════════════════
+// ITINERARY ENGINE
+// ══════════════════════════════════════════════════
+const CLUSTERS = {
+  'North Beach & Russian Hill':['Russian Hill','North Beach','Telegraph Hill','Polk Gulch','Lower Nob Hill','Nob Hill'],
+  'Waterfront & Embarcadero':  ["Fisherman's Wharf",'Embarcadero','South Beach','Fort Mason','Jackson Square','Financial District'],
+  'Downtown & SoMa':           ['Union Square','SoMa','Civic Center','Chinatown','Mission Bay'],
+  'The Mission & Castro':      ['The Mission','The Castro','Duboce Triangle','Bernal Heights'],
+  'Outer SF':                  ['Dogpatch','Outer Sunset','Inner Richmond','Outer Richmond','Haight-Ashbury','Presidio','Bayview']
+};
+const INTROS = {
+  'North Beach & Russian Hill':"Start in my favorite corner of the city. The hills are steep, the views are killer, and the neighborhood has some of the best food and bars in SF.",
+  'Waterfront & Embarcadero':  "A day along the water. From the Embarcadero to the Wharf — you'll cover a lot of ground and understand why people fall in love with this city.",
+  'Downtown & SoMa':           "The heart of it all. Dense, walkable, and packed with surprises. SoMa, Chinatown, Nob Hill — this is the city's engine room.",
+  'The Mission & Castro':      "The heart and soul of the city. Incredible street art, the best burritos on earth, and neighborhoods with real character. You'll want to live here.",
+  'Outer SF':                  "Out to the edges. The Sunset, the Richmond, Dogpatch — these are the neighborhoods where people actually live, and they're better for it."
+};
+const TRANSIT_HINTS = {
+  'North Beach & Russian Hill':"~10-minute walk (it's hilly, you've been warned)",
+  'Waterfront & Embarcadero':  '~8-minute walk along the waterfront',
+  'Downtown & SoMa':           '~7-minute walk or jump on a Muni',
+  'The Mission & Castro':      '~12-minute walk or a quick bike',
+  'Outer SF':                  '~15-minute walk or Muni'
+};
+
+function buildItinerary(ans) {
+  const numDays = ({1:1,2:2,3:3,'4-5':4,'6-7':5,'1week+':5})[ans.tripLength]||2;
+  const noBars  = ans.drinking==='no-drink';
+  const noSplurge = ans.budget==='cheap';
+  const ints = ans.interests||[];
+
+  let pool = PLACES.filter(p => {
+    if (noBars && p.category==='Bar') return false;
+    if (noSplurge && ['$100+','$50-100'].includes(p.priceRange)) return false;
+    return true;
+  });
+
+  const score = p => {
+    let s = p.googleRating * 0.8 + Math.log10(p.reviewCount+1) * 0.4;
+    if (ints.includes('Food & dining') && p.category==='Restaurant') s+=2;
+    if (ints.includes('Bars & nightlife') && p.category==='Bar') s+=2;
+    if (ints.includes('Outdoors & hiking') && p.category==='Park') s+=2;
+    if (ints.includes('Arts & culture') && ['Museum','Activity'].includes(p.category)) s+=2;
+    if (ints.includes('History') && ['Landmark','Museum'].includes(p.category)) s+=1;
+    return s;
+  };
+
+  const used = new Set();
+  const clusterKeys = Object.keys(CLUSTERS);
+  const days = [];
+
+  for (let d=0; d<numDays; d++) {
+    const cluster = clusterKeys[d%clusterKeys.length];
+    const hoods   = CLUSTERS[cluster];
+    const ranked  = [...pool]
+      .filter(p=>!used.has(p.id))
+      .sort((a,b)=> {
+        const aIn = hoods.includes(a.neighborhood)?1:0;
+        const bIn = hoods.includes(b.neighborhood)?1:0;
+        return (bIn-aIn)||score(b)-score(a);
+      });
+
+    const morning = ranked.filter(p=>['Cafe','Park'].includes(p.category)).slice(0,1);
+    const usedSoFar = new Set(morning.map(x=>x.id));
+    const midday  = ranked.filter(p=>!usedSoFar.has(p.id)&&['Restaurant','Museum','Activity','Landmark'].includes(p.category)).slice(0,2);
+    midday.forEach(p=>usedSoFar.add(p.id));
+    const evening = ranked.filter(p=>!usedSoFar.has(p.id)&&(p.category==='Bar'||p.category==='Restaurant')).slice(0,noBars?1:2);
+
+    [...morning,...midday,...evening].forEach(p=>used.add(p.id));
+    days.push({num:d+1,name:['one','two','three','four','five'][d],cluster,morning,midday,evening});
+  }
+
+  const sub = [
+    ({solo:'Solo',couple:'Couple',friends:'With friends','family-kids':'Family','family-adults':'Family'})[ans.groupType],
+    ({touristy:'Big sights',hidden:'Off the beaten path',both:'Best of both'})[ans.vibe],
+    ({packed:'Jam-packed',balanced:'Balanced pace',relaxed:'Relaxed pace'})[ans.pace]
+  ].filter(Boolean).join(' · ');
+
+  return {title:`${numDays} Day${numDays>1?'s':''} in San Francisco`,subtitle:sub,days};
+}
+
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+const CAT_BG = {Cafe:'#F5EEE3',Bar:'#EBF0F5',Museum:'#EEE8F5',Restaurant:'#F5EBE3',Park:'#E8F5EE',Landmark:'#F5F0E3',Activity:'#F0EBF5',Hotel:'#F5F0EC'};
+function catBg(p){return CAT_BG[p.category]||'#F0ECE3';}
+
+function emo(p){
+  const s=(p.subcategory||'').toLowerCase();
+  if(p.category==='Cafe') return s.includes('donut')?'🍩':'☕';
+  if(p.category==='Bar')  return s.includes('brew')?'🍺':s.includes('wine')?'🍷':s.includes('tiki')?'🌺':s.includes('cocktail')?'🍸':'🍻';
+  if(p.category==='Museum') return s.includes('science')?'🔬':s.includes('art')?'🎨':s.includes('rail')?'🚃':'🏛️';
+  if(p.category==='Park') return s.includes('hik')?'🥾':'🌿';
+  if(p.category==='Landmark') return s.includes('bridge')?'🌉':s.includes('natur')?'🌲':'📍';
+  if(p.category==='Activity') return s.includes('theater')?'🎭':s.includes('stadium')?'⚾':'🎯';
+  if(s.includes('pizza')) return '🍕';
+  if(s.includes('mexican')||s.includes('taco')) return '🌮';
+  if(s.includes('chinese')) return '🥢';
+  if(s.includes('vietnamese')) return '🍜';
+  if(s.includes('indian')||s.includes('nepalese')) return '🍛';
+  if(s.includes('seafood')||s.includes('oyster')) return '🦪';
+  if(s.includes('burger')||s.includes('hamb')) return '🍔';
+  if(s.includes('diner')) return '🍳';
+  if(s.includes('ice cream')) return '🍦';
+  if(s.includes('bakery')) return '🥐';
+  if(s.includes('sandwich')) return '🥪';
+  if(s.includes('italian')) return '🍝';
+  if(s.includes('mediterr')||s.includes('shawarma')) return '🥙';
+  if(s.includes('pakistani')) return '🫕';
+  if(s.includes('peruvian')) return '🦐';
+  return '🍽️';
+}
+
+function mk(tag,cls,txt){
+  const e=document.createElement(tag);
+  if(cls) e.className=cls;
+  if(txt!==undefined) e.textContent=txt;
+  return e;
+}
+function ap(p,...cs){cs.forEach(c=>c&&p.appendChild(c));return p;}
+function maps(p){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name+' San Francisco')}`;}
+
+// ══════════════════════════════════════════════════
+// SHARED COMPONENTS
+// ══════════════════════════════════════════════════
+function Nav(right){
+  const nav=mk('div','nav');
+  const brand=mk('div','nav-brand');
+  ap(brand,mk('div','crest','SG'),mk('span','brand-name','Sam Says Go!'));
+  brand.addEventListener('click',()=>go({page:'home'}));
+  ap(nav,brand,right||mk('span'));
+  return nav;
+}
+
+function Ornament(){
+  const d=mk('div','ornament');
+  ap(d,mk('div','orn-line'),mk('span','orn-star','✳'),mk('div','orn-line'));
+  return d;
+}
+
+function PlaceCard(p){
+  const mustDo=p.googleRating>=4.7&&p.reviewCount>500;
+  const card=mk('div','place-card');
+  const photo=mk('div','place-photo',emo(p));
+  photo.style.background=catBg(p);
+  if(mustDo){const b=mk('div','place-badge','Must-do');photo.appendChild(b);}
+  const body=mk('div','place-body');
+  const top=mk('div','place-top');
+  ap(top,mk('div','place-name',p.name),mk('div','place-price',p.priceRange||''));
+  const meta=mk('div','place-meta',`${p.neighborhood} · ${p.subcategory||p.category}`);
+  const copy=mk('div','place-copy',p.samCommentary);
+  const acts=mk('div','place-acts');
+  const dir=mk('a','','Directions ↗'); dir.href=maps(p); dir.target='_blank';
+  const dot=mk('span','dot','·');
+  const rat=mk('span','',`⭐ ${p.googleRating} (${p.reviewCount.toLocaleString()})`);
+  rat.style.cssText='color:var(--light);font-size:11px';
+  ap(acts,dir,dot,rat);
+  ap(body,top,meta,copy,acts);
+  ap(card,photo,body);
+  return card;
+}
+
+// ══════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════
+function renderHome(app){
+  const nl=mk('div','nav-links');
+  const bb=mk('button','','Browse places'); bb.addEventListener('click',()=>go({page:'browse'}));
+  const ab=mk('button','','About'); ab.addEventListener('click',()=>alert('Sam Says Go! is a hand-curated guide to San Francisco by Sam. Every place is personally selected — no algorithms, no paid listings.'));
+  ap(nl,bb,ab);
+  app.appendChild(Nav(nl));
+
+  // Hero
+  const hero=mk('div','hero');
+  const ew=mk('span','eyebrow','Your friend in every city');
+  const h1=mk('h1','','San Francisco');
+  const sub=mk('p','hero-sub','White glove curation for free.');
+  const ctaWrap=mk('div','hero-cta');
+  const cta=mk('button','btn-cta','Plan my trip');
+  cta.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  const note=mk('span','hero-note','Takes under 60 seconds');
+  ap(ctaWrap,cta,note);
+  ap(hero,ew,h1,sub,ctaWrap);
+  app.appendChild(hero);
+  app.appendChild(Ornament());
+
+  // How it works
+  const how=mk('div','how-section');
+  const hh=mk('h2','','How it works');
+  const sg=mk('div','steps');
+  [['I','Answer 8 quick questions','Trip length, vibe, what you\'re into — takes under a minute.'],
+   ['II','Get your itinerary','A day-by-day plan built from Sam\'s personal picks, tailored for you.'],
+   ['III','Go explore','Every spot has Sam\'s commentary and a link to directions.']
+  ].forEach(([n,t,d])=>{
+    const s=mk('div','step');
+    ap(s,mk('div','step-num',n),mk('div','step-title',t),mk('div','step-desc',d));
+    sg.appendChild(s);
+  });
+  ap(how,hh,sg);
+  app.appendChild(how);
+  app.appendChild(Ornament());
+
+  // Featured
+  const fs=mk('div','feat-section');
+  const fh=mk('h2','','A few favorites');
+  const fg=mk('div','feat-grid');
+  ['arsicault-bakery','vesuvio-cafe','alcatraz-island']
+    .map(id=>PLACES.find(p=>p.id===id)).filter(Boolean)
+    .forEach(p=>{
+      const card=mk('div','feat-card');
+      const ph=mk('div','feat-photo',emo(p)); ph.style.background=catBg(p);
+      const inf=mk('div','feat-info');
+      ap(inf,mk('div','feat-name',p.name),mk('div','feat-meta',`${p.neighborhood} · ${p.priceRange}`),mk('div','feat-snip',p.samCommentary));
+      ap(card,ph,inf);
+      card.addEventListener('click',()=>go({page:'browse'}));
+      fg.appendChild(card);
+    });
+  ap(fs,fh,fg);
+  app.appendChild(fs);
+
+  const footer=mk('div','footer');
+  footer.appendChild(mk('p','','Not a directory. Not crowdsourced. One person\'s guide to the city.'));
+  app.appendChild(footer);
+}
+
+// ══════════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════════
+function renderQuiz(app){
+  const q=QS[S.step];
+  const pct=S.step/QS.length*100;
+  const counter=mk('span','nav-counter',`${S.step+1} of 8`);
+  app.appendChild(Nav(counter));
+
+  const track=mk('div','progress-track');
+  const fill=mk('div','progress-fill'); fill.style.width=Math.max(pct,5)+'%';
+  track.appendChild(fill); app.appendChild(track);
+
+  const qh=mk('div','q-header');
+  ap(qh,mk('span','eyebrow',q.ew),mk('h2','q-heading',q.h),mk('p','q-sub',q.s));
+  app.appendChild(qh);
+
+  const cur=S.answers[q.id];
+
+  function advance(newAns){
+    if(S.step<QS.length-1) go({answers:newAns,step:S.step+1});
+    else go({page:'itinerary',answers:newAns,itinerary:buildItinerary(newAns)});
+  }
+
+  if(q.t==='single'){
+    const opts=mk('div','options');
+    q.opts.forEach(opt=>{
+      const card=mk('div',cur===opt.v?'opt-card selected':'opt-card');
+      const radio=mk('div',cur===opt.v?'radio on':'radio');
+      if(cur===opt.v) radio.appendChild(mk('div','radio-dot'));
+      const txt=mk('div');
+      ap(txt,mk('div','opt-label',opt.l),mk('div','opt-desc',opt.d));
+      ap(card,radio,txt);
+      card.addEventListener('click',()=>advance({...S.answers,[q.id]:opt.v}));
+      opts.appendChild(card);
+    });
+    app.appendChild(opts);
+  } else {
+    const curArr=Array.isArray(cur)?cur:[];
+    const wrap=mk('div','pills-wrap');
+    q.opts.forEach(opt=>{
+      const pill=mk('div',curArr.includes(opt)?'pill on':'pill',opt);
+      pill.addEventListener('click',()=>{
+        const next=curArr.includes(opt)?curArr.filter(x=>x!==opt):[...curArr,opt];
+        go({answers:{...S.answers,[q.id]:next}});
+      });
+      wrap.appendChild(pill);
+    });
+    app.appendChild(wrap);
+  }
+
+  const nav=mk('div','quiz-nav');
+  const back=mk('button','btn-ghost',S.step===0?'← Back to home':'← Back');
+  back.addEventListener('click',()=>{ if(S.step===0) go({page:'home'}); else go({step:S.step-1}); });
+  nav.appendChild(back);
+
+  if(q.t==='multi'){
+    const isLast=S.step===QS.length-1;
+    const next=mk('button','btn-cta',isLast?'Build my itinerary →':'Next →');
+    next.addEventListener('click',()=>advance(S.answers));
+    nav.appendChild(next);
+  }
+  app.appendChild(nav);
+}
+
+// ══════════════════════════════════════════════════
+// ITINERARY
+// ══════════════════════════════════════════════════
+function renderItinerary(app){
+  const itin=S.itinerary;
+  if(!itin){go({page:'home'});return;}
+
+  const nl=mk('div','nav-links');
+  const rb=mk('button','','Retake quiz'); rb.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  const bb=mk('button','','Browse places'); bb.addEventListener('click',()=>go({page:'browse'}));
+  ap(nl,rb,bb);
+  app.appendChild(Nav(nl));
+
+  const hdr=mk('div','itin-header');
+  const ew=mk('span','eyebrow','Your itinerary');
+  const title=mk('h1','itin-title',itin.title);
+  const meta=mk('div','itin-meta');
+  itin.subtitle.split(' · ').forEach((s,i,a)=>{
+    meta.appendChild(mk('span','',s));
+    if(i<a.length-1) meta.appendChild(mk('span','itin-dot','·'));
+  });
+  ap(hdr,ew,title,meta);
+  app.appendChild(hdr);
+
+  itin.days.forEach(day=>{
+    app.appendChild(Ornament());
+    const sec=mk('div','day-section');
+    ap(sec,
+      mk('h2','day-header',`Day ${day.name} — ${day.cluster}`),
+      mk('p','day-intro',INTROS[day.cluster])
+    );
+
+    [{label:'Morning',places:day.morning},{label:'Afternoon',places:day.midday},{label:'Evening',places:day.evening}]
+      .filter(g=>g.places.length>0)
+      .forEach((g,gi,arr)=>{
+        sec.appendChild(mk('div','time-label',g.label));
+        g.places.forEach((p,pi)=>{
+          sec.appendChild(PlaceCard(p));
+          if(pi<g.places.length-1) sec.appendChild(mk('div','transit',TRANSIT_HINTS[day.cluster]||'~10-minute walk'));
+        });
+        if(gi<arr.length-1) sec.appendChild(mk('div','transit','Head toward the next part of the day ↓'));
+      });
+
+    app.appendChild(sec);
+  });
+
+  app.appendChild(Ornament());
+
+  const footer=mk('div','itin-footer');
+  footer.appendChild(mk('p','','That\'s Sam\'s pick for your trip. Every place has been personally visited. Enjoy the city.'));
+  const acts=mk('div','itin-acts');
+
+  const pb=mk('button','btn-outline','Print / Save PDF');
+  pb.addEventListener('click',()=>window.print());
+
+  const sb=mk('button','btn-outline','Copy link');
+  sb.addEventListener('click',()=>{
+    if(navigator.clipboard){navigator.clipboard.writeText(window.location.href).then(()=>{sb.textContent='Copied!';setTimeout(()=>{sb.textContent='Copy link';},2000);});}
+    else{sb.textContent='Use browser share';}
+  });
+
+  const cb=mk('button','btn-outline','Change preferences');
+  cb.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+
+  ap(acts,pb,sb,cb);
+  ap(footer,acts);
+  app.appendChild(footer);
+}
+
+// ══════════════════════════════════════════════════
+// BROWSE
+// ══════════════════════════════════════════════════
+function renderBrowse(app){
+  const nl=mk('div','nav-links');
+  const pb=mk('button','','Plan my trip'); pb.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  nl.appendChild(pb);
+  app.appendChild(Nav(nl));
+
+  const hdr=mk('div','browse-hdr');
+  ap(hdr,
+    mk('span','eyebrow','The full list'),
+    mk('h2','',`All of Sam's picks`),
+    mk('p','',`${PLACES.length} places, hand-selected and personally vetted.`)
+  );
+  app.appendChild(hdr);
+
+  const sw=mk('div','search-wrap');
+  const inp=mk('input');
+  inp.type='text'; inp.placeholder='Search by name, neighborhood, or vibe…'; inp.value=S.bSearch;
+  inp.addEventListener('input',e=>go({bSearch:e.target.value}));
+  sw.appendChild(inp); app.appendChild(sw);
+
+  const fr=mk('div','filter-row');
+  ['All','Restaurant','Bar','Cafe','Museum','Park','Landmark','Activity'].forEach(cat=>{
+    const fp=mk('div',cat===S.bFilter?'fpill on':'fpill',cat);
+    fp.addEventListener('click',()=>go({bFilter:cat}));
+    fr.appendChild(fp);
+  });
+  app.appendChild(fr);
+
+  const search=S.bSearch.toLowerCase().trim();
+  const filtered=PLACES.filter(p=>{
+    const catOk=S.bFilter==='All'||p.category===S.bFilter;
+    const sok=!search||p.name.toLowerCase().includes(search)||p.neighborhood.toLowerCase().includes(search)||(p.samCommentary||'').toLowerCase().includes(search)||(p.subcategory||'').toLowerCase().includes(search);
+    return catOk&&sok;
+  });
+
+  const list=mk('div','browse-list');
+  if(filtered.length===0){
+    list.appendChild(mk('div','empty','No places found. Try a different search.'));
+  } else {
+    filtered.forEach(p=>{
+      const card=mk('div','b-card');
+      const em=mk('div','b-emoji',emo(p)); em.style.background=catBg(p);
+      const inf=mk('div','b-info');
+      ap(inf,mk('div','b-name',p.name),mk('div','b-hood',`${p.neighborhood} · ${p.priceRange||'–'}`),mk('div','b-snip',p.samCommentary));
+      const right=mk('div','b-right');
+      const dir=mk('a','b-dir','Directions ↗'); dir.href=maps(p); dir.target='_blank';
+      ap(right,mk('span','b-rating',`⭐ ${p.googleRating}`),dir);
+      ap(card,em,inf,right);
+      list.appendChild(card);
+    });
+  }
+  app.appendChild(list);
+}
+
+// ══════════════════════════════════════════════════
+// MOUNT
+// ══════════════════════════════════════════════════
+function mount(){
+  const root=document.getElementById('root');
+  root.innerHTML='';
+  const app=mk('div','app');
+  if(S.page==='home')        renderHome(app);
+  else if(S.page==='quiz')   renderQuiz(app);
+  else if(S.page==='itinerary') renderItinerary(app);
+  else if(S.page==='browse')    renderBrowse(app);
+  root.appendChild(app);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+mount();
+</script>
+</body>
+</html>
