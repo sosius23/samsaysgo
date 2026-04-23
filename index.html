@@ -188,6 +188,14 @@ body { background:var(--page); min-height:100vh; display:flex; justify-content:c
   .b-card { flex-direction:column; }
   .b-emoji { width:100%; height:60px; }
 }
+@media print{
+  body { padding:0; background:white; }
+  .app { border:none; border-radius:0; }
+  .nav,.itin-acts,.transit { display:none; }
+  .place-card { break-inside:avoid; box-shadow:none; border:0.5px solid #ccc; }
+  .place-photo { background:none !important; }
+  .day-section { break-inside:avoid; }
+}
 </style>
 </head>
 <body>
@@ -371,12 +379,13 @@ function Ornament(){
 function PlaceCard(p){
   const mustDo=p.googleRating>=4.7&&p.reviewCount>500;
   const card=mk('div','place-card');
-  const photo=mk('div','place-photo',emo(p));
-  photo.style.background=catBg(p);
+  const photo=mk('div','place-photo');
+  if(p.photo){photo.style.backgroundImage=`url(${p.photo})`;photo.style.backgroundSize='cover';photo.style.backgroundPosition='center';}
+  else{photo.textContent=emo(p);photo.style.background=catBg(p);}
   if(mustDo){const b=mk('div','place-badge','Must-do');photo.appendChild(b);}
   const body=mk('div','place-body');
   const top=mk('div','place-top');
-  ap(top,mk('div','place-name',p.name),mk('div','place-price',p.priceRange||''));
+  ap(top,mk('div','place-name',p.name),mk('div','place-price',p.priceRange||'–'));
   const meta=mk('div','place-meta',`${p.neighborhood} · ${p.subcategory||p.category}`);
   const copy=mk('div','place-copy',p.samCommentary);
   const acts=mk('div','place-acts');
@@ -438,7 +447,9 @@ function renderHome(app){
     .map(id=>PLACES.find(p=>p.id===id)).filter(Boolean)
     .forEach(p=>{
       const card=mk('div','feat-card');
-      const ph=mk('div','feat-photo',emo(p)); ph.style.background=catBg(p);
+      const ph=mk('div','feat-photo');
+      if(p.photo){ph.style.backgroundImage=`url(${p.photo})`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';}
+      else{ph.textContent=emo(p);ph.style.background=catBg(p);}
       const inf=mk('div','feat-info');
       ap(inf,mk('div','feat-name',p.name),mk('div','feat-meta',`${p.neighborhood} · ${p.priceRange}`),mk('div','feat-snip',p.samCommentary));
       ap(card,ph,inf);
@@ -574,9 +585,13 @@ function renderItinerary(app){
   pb.addEventListener('click',()=>window.print());
 
   const sb=mk('button','btn-outline','Copy link');
+  let sbTimer;
   sb.addEventListener('click',()=>{
-    if(navigator.clipboard){navigator.clipboard.writeText(window.location.href).then(()=>{sb.textContent='Copied!';setTimeout(()=>{sb.textContent='Copy link';},2000);});}
-    else{sb.textContent='Use browser share';}
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(window.location.href)
+        .then(()=>{clearTimeout(sbTimer);sb.textContent='Copied!';sbTimer=setTimeout(()=>{sb.textContent='Copy link';},2000);})
+        .catch(()=>{clearTimeout(sbTimer);sb.textContent='Failed — try again';sbTimer=setTimeout(()=>{sb.textContent='Copy link';},2000);});
+    } else { sb.textContent='Not supported'; }
   });
 
   const cb=mk('button','btn-outline','Change preferences');
@@ -631,7 +646,9 @@ function renderBrowse(app){
   } else {
     filtered.forEach(p=>{
       const card=mk('div','b-card');
-      const em=mk('div','b-emoji',emo(p)); em.style.background=catBg(p);
+      const em=mk('div','b-emoji');
+      if(p.photo){em.style.backgroundImage=`url(${p.photo})`;em.style.backgroundSize='cover';em.style.backgroundPosition='center';}
+      else{em.textContent=emo(p);em.style.background=catBg(p);}
       const inf=mk('div','b-info');
       ap(inf,mk('div','b-name',p.name),mk('div','b-hood',`${p.neighborhood} · ${p.priceRange||'–'}`),mk('div','b-snip',p.samCommentary));
       const right=mk('div','b-right');
