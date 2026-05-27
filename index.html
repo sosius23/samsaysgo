@@ -67,9 +67,6 @@ body { background:var(--page); min-height:100vh; display:flex; justify-content:c
 /* EYEBROW */
 .eyebrow { font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--accent); font-family:var(--sans); display:block; }
 
-/* TAG */
-.tag { font-size:10px; color:var(--muted); background:var(--sand); padding:2px 8px; border-radius:3px; font-family:var(--sans); white-space:nowrap; }
-
 /* ── HOMEPAGE ── */
 .hero { padding:60px 40px 48px; text-align:center; }
 .hero .eyebrow { margin-bottom:16px; }
@@ -79,14 +76,14 @@ body { background:var(--page); min-height:100vh; display:flex; justify-content:c
 .hero-note { font-size:12px; color:var(--light); }
 .how-section { padding:32px 40px 28px; }
 .how-section h2 { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--dark); margin-bottom:24px; text-align:center; }
-.steps { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+.steps { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
 .step { text-align:center; }
 .step-num   { font-family:var(--serif); font-size:22px; color:var(--accent); margin-bottom:10px; font-style:italic; }
 .step-title { font-size:13px; font-weight:600; color:var(--dark); margin-bottom:6px; }
 .step-desc  { font-size:12px; color:var(--muted); line-height:1.55; }
 .feat-section { padding:0 40px 40px; }
 .feat-section h2 { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--dark); margin-bottom:20px; text-align:center; }
-.feat-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
 .feat-card { border:0.5px solid var(--border); border-radius:8px; background:var(--card); overflow:hidden; cursor:pointer; transition:box-shadow 0.2s; }
 .feat-card:hover { box-shadow:0 2px 12px rgba(60,56,44,0.1); }
 .feat-photo { height:90px; display:flex; align-items:center; justify-content:center; font-size:28px; }
@@ -140,6 +137,7 @@ body { background:var(--page); min-height:100vh; display:flex; justify-content:c
 .place-acts  { display:flex; gap:14px; font-size:11px; align-items:center; }
 .place-acts a { color:var(--accent); text-decoration:none; transition:color 0.15s; }
 .place-acts a:hover { color:#7A5E3E; }
+.place-rating { color:var(--light); font-size:11px; }
 .place-acts .dot { color:var(--border); }
 .transit     { font-family:var(--serif); font-size:12px; font-style:italic; color:var(--light); padding:8px 20px; border-left:1.5px solid #E8E4DA; margin:2px 0 2px 16px; }
 .itin-footer { padding:32px 40px 40px; text-align:center; border-top:0.5px solid var(--border); margin-top:16px; }
@@ -213,6 +211,7 @@ const PLACES = [{"id":"radhaus","name":"Radhaus","category":"Bar","subcategory":
 // ══════════════════════════════════════════════════
 const S = { page:'home', step:0, answers:{}, itinerary:null, bFilter:'All', bSearch:'' };
 function go(u) { Object.assign(S, u); mount(); }
+function startQuiz() { go({page:'quiz',step:0,answers:{}}); }
 
 // ══════════════════════════════════════════════════
 // QUIZ QUESTIONS
@@ -239,26 +238,32 @@ const QS = [
 // ══════════════════════════════════════════════════
 // ITINERARY ENGINE
 // ══════════════════════════════════════════════════
-const CLUSTERS = {
-  'North Beach & Russian Hill':['Russian Hill','North Beach','Telegraph Hill','Polk Gulch','Lower Nob Hill','Nob Hill'],
-  'Waterfront & Embarcadero':  ["Fisherman's Wharf",'Embarcadero','South Beach','Fort Mason','Jackson Square','Financial District'],
-  'Downtown & SoMa':           ['Union Square','SoMa','Civic Center','Chinatown','Mission Bay','Mission Rock'],
-  'The Mission & Castro':      ['The Mission','The Castro','Duboce Triangle','Bernal Heights'],
-  'Outer SF':                  ['Dogpatch','Outer Sunset','Inner Richmond','Outer Richmond','Haight-Ashbury','Presidio','Bayview']
-};
-const INTROS = {
-  'North Beach & Russian Hill':"Start in my favorite corner of the city. The hills are steep, the views are killer, and the neighborhood has some of the best food and bars in SF.",
-  'Waterfront & Embarcadero':  "A day along the water. From the Embarcadero to the Wharf — you'll cover a lot of ground and understand why people fall in love with this city.",
-  'Downtown & SoMa':           "The heart of it all. Dense, walkable, and packed with surprises. SoMa, Chinatown, Nob Hill — this is the city's engine room.",
-  'The Mission & Castro':      "The heart and soul of the city. Incredible street art, the best burritos on earth, and neighborhoods with real character. You'll want to live here.",
-  'Outer SF':                  "Out to the edges. The Sunset, the Richmond, Dogpatch — these are the neighborhoods where people actually live, and they're better for it."
-};
-const TRANSIT_HINTS = {
-  'North Beach & Russian Hill':"~10-minute walk (it's hilly, you've been warned)",
-  'Waterfront & Embarcadero':  '~8-minute walk along the waterfront',
-  'Downtown & SoMa':           '~7-minute walk or jump on a Muni',
-  'The Mission & Castro':      '~12-minute walk or a quick bike',
-  'Outer SF':                  '~15-minute walk or Muni'
+const CLUSTER_DATA = {
+  'North Beach & Russian Hill': {
+    hoods:   ['Russian Hill','North Beach','Telegraph Hill','Polk Gulch','Lower Nob Hill','Nob Hill'],
+    intro:   "Start in my favorite corner of the city. The hills are steep, the views are killer, and the neighborhood has some of the best food and bars in SF.",
+    transit: "~10-minute walk (it's hilly, you've been warned)"
+  },
+  'Waterfront & Embarcadero': {
+    hoods:   ["Fisherman's Wharf",'Embarcadero','South Beach','Fort Mason','Jackson Square','Financial District'],
+    intro:   "A day along the water. From the Embarcadero to the Wharf — you'll cover a lot of ground and understand why people fall in love with this city.",
+    transit: '~8-minute walk along the waterfront'
+  },
+  'Downtown & SoMa': {
+    hoods:   ['Union Square','SoMa','Civic Center','Chinatown','Mission Bay','Mission Rock'],
+    intro:   "The heart of it all. Dense, walkable, and packed with surprises. SoMa, Chinatown, Nob Hill — this is the city's engine room.",
+    transit: '~7-minute walk or jump on a Muni'
+  },
+  'The Mission & Castro': {
+    hoods:   ['The Mission','The Castro','Duboce Triangle','Bernal Heights'],
+    intro:   "The heart and soul of the city. Incredible street art, the best burritos on earth, and neighborhoods with real character. You'll want to live here.",
+    transit: '~12-minute walk or a quick bike'
+  },
+  'Outer SF': {
+    hoods:   ['Dogpatch','Outer Sunset','Inner Richmond','Outer Richmond','Haight-Ashbury','Presidio','Bayview'],
+    intro:   "Out to the edges. The Sunset, the Richmond, Dogpatch — these are the neighborhoods where people actually live, and they're better for it.",
+    transit: '~15-minute walk or Muni'
+  }
 };
 
 function buildItinerary(ans) {
@@ -284,12 +289,12 @@ function buildItinerary(ans) {
   };
 
   const used = new Set();
-  const clusterKeys = Object.keys(CLUSTERS);
+  const clusterKeys = Object.keys(CLUSTER_DATA);
   const days = [];
 
   for (let d=0; d<numDays; d++) {
     const cluster = clusterKeys[d%clusterKeys.length];
-    const hoods   = CLUSTERS[cluster];
+    const hoods   = CLUSTER_DATA[cluster].hoods;
     const ranked  = [...pool]
       .filter(p=>!used.has(p.id))
       .sort((a,b)=> {
@@ -308,19 +313,19 @@ function buildItinerary(ans) {
     days.push({num:d+1,name:['one','two','three','four','five'][d],cluster,morning,midday,evening});
   }
 
-  const sub = [
+  const subtitleParts = [
     ({solo:'Solo',couple:'Couple',friends:'With friends','family-kids':'Family','family-adults':'Family'})[ans.groupType],
     ({touristy:'Big sights',hidden:'Off the beaten path',both:'Best of both'})[ans.vibe],
     ({packed:'Jam-packed',balanced:'Balanced pace',relaxed:'Relaxed pace'})[ans.pace]
-  ].filter(Boolean).join(' · ');
+  ].filter(Boolean);
 
-  return {title:`${numDays} Day${numDays>1?'s':''} in San Francisco`,subtitle:sub,days};
+  return {title:`${numDays} Day${numDays>1?'s':''} in San Francisco`, subtitleParts, days};
 }
 
 // ══════════════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════════════
-const CAT_BG = {Cafe:'#F5EEE3',Bar:'#EBF0F5',Museum:'#EEE8F5',Restaurant:'#F5EBE3',Park:'#E8F5EE',Landmark:'#F5F0E3',Activity:'#F0EBF5',Hotel:'#F5F0EC'};
+const CAT_BG = {Cafe:'#F5EEE3',Bar:'#EBF0F5',Museum:'#EEE8F5',Restaurant:'#F5EBE3',Park:'#E8F5EE',Landmark:'#F5F0E3',Activity:'#F0EBF5'};
 function catBg(p){return CAT_BG[p.category]||'#F0ECE3';}
 
 function emo(p){
@@ -347,6 +352,11 @@ function emo(p){
   if(s.includes('pakistani')) return '🫕';
   if(s.includes('peruvian')) return '🦐';
   return '🍽️';
+}
+
+function applyPhoto(el,p){
+  if(p.photo){el.style.backgroundImage=`url(${p.photo})`;el.style.backgroundSize='cover';el.style.backgroundPosition='center';}
+  else{el.textContent=emo(p);el.style.background=catBg(p);}
 }
 
 function mk(tag,cls,txt){
@@ -380,8 +390,7 @@ function PlaceCard(p){
   const mustDo=p.googleRating>=4.7&&p.reviewCount>500;
   const card=mk('div','place-card');
   const photo=mk('div','place-photo');
-  if(p.photo){photo.style.backgroundImage=`url(${p.photo})`;photo.style.backgroundSize='cover';photo.style.backgroundPosition='center';}
-  else{photo.textContent=emo(p);photo.style.background=catBg(p);}
+  applyPhoto(photo,p);
   if(mustDo){const b=mk('div','place-badge','Must-do');photo.appendChild(b);}
   const body=mk('div','place-body');
   const top=mk('div','place-top');
@@ -391,8 +400,7 @@ function PlaceCard(p){
   const acts=mk('div','place-acts');
   const dir=mk('a','','Directions ↗'); dir.href=maps(p); dir.target='_blank';
   const dot=mk('span','dot','·');
-  const rat=mk('span','',`⭐ ${p.googleRating} (${p.reviewCount.toLocaleString()})`);
-  rat.style.cssText='color:var(--light);font-size:11px';
+  const rat=mk('span','place-rating',`⭐ ${p.googleRating} (${p.reviewCount.toLocaleString()})`);
   ap(acts,dir,dot,rat);
   ap(body,top,meta,copy,acts);
   ap(card,photo,body);
@@ -416,7 +424,7 @@ function renderHome(app){
   const sub=mk('p','hero-sub','White glove curation for free.');
   const ctaWrap=mk('div','hero-cta');
   const cta=mk('button','btn-cta','Plan my trip');
-  cta.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  cta.addEventListener('click',startQuiz);
   const note=mk('span','hero-note','Takes under 60 seconds');
   ap(ctaWrap,cta,note);
   ap(hero,ew,h1,sub,ctaWrap);
@@ -448,8 +456,7 @@ function renderHome(app){
     .forEach(p=>{
       const card=mk('div','feat-card');
       const ph=mk('div','feat-photo');
-      if(p.photo){ph.style.backgroundImage=`url(${p.photo})`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';}
-      else{ph.textContent=emo(p);ph.style.background=catBg(p);}
+      applyPhoto(ph,p);
       const inf=mk('div','feat-info');
       ap(inf,mk('div','feat-name',p.name),mk('div','feat-meta',`${p.neighborhood} · ${p.priceRange}`),mk('div','feat-snip',p.samCommentary));
       ap(card,ph,inf);
@@ -537,7 +544,7 @@ function renderItinerary(app){
   if(!itin){go({page:'home'});return;}
 
   const nl=mk('div','nav-links');
-  const rb=mk('button','','Retake quiz'); rb.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  const rb=mk('button','','Retake quiz'); rb.addEventListener('click',startQuiz);
   const bb=mk('button','','Browse places'); bb.addEventListener('click',()=>go({page:'browse'}));
   ap(nl,rb,bb);
   app.appendChild(Nav(nl));
@@ -546,7 +553,7 @@ function renderItinerary(app){
   const ew=mk('span','eyebrow','Your itinerary');
   const title=mk('h1','itin-title',itin.title);
   const meta=mk('div','itin-meta');
-  itin.subtitle.split(' · ').forEach((s,i,a)=>{
+  itin.subtitleParts.forEach((s,i,a)=>{
     meta.appendChild(mk('span','',s));
     if(i<a.length-1) meta.appendChild(mk('span','itin-dot','·'));
   });
@@ -558,7 +565,7 @@ function renderItinerary(app){
     const sec=mk('div','day-section');
     ap(sec,
       mk('h2','day-header',`Day ${day.name} — ${day.cluster}`),
-      mk('p','day-intro',INTROS[day.cluster])
+      mk('p','day-intro',CLUSTER_DATA[day.cluster].intro)
     );
 
     [{label:'Morning',places:day.morning},{label:'Afternoon',places:day.midday},{label:'Evening',places:day.evening}]
@@ -567,7 +574,7 @@ function renderItinerary(app){
         sec.appendChild(mk('div','time-label',g.label));
         g.places.forEach((p,pi)=>{
           sec.appendChild(PlaceCard(p));
-          if(pi<g.places.length-1) sec.appendChild(mk('div','transit',TRANSIT_HINTS[day.cluster]||'~10-minute walk'));
+          if(pi<g.places.length-1) sec.appendChild(mk('div','transit',CLUSTER_DATA[day.cluster].transit));
         });
         if(gi<arr.length-1) sec.appendChild(mk('div','transit','Head toward the next part of the day ↓'));
       });
@@ -595,7 +602,7 @@ function renderItinerary(app){
   });
 
   const cb=mk('button','btn-outline','Change preferences');
-  cb.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  cb.addEventListener('click',startQuiz);
 
   ap(acts,pb,sb,cb);
   ap(footer,acts);
@@ -607,7 +614,7 @@ function renderItinerary(app){
 // ══════════════════════════════════════════════════
 function renderBrowse(app){
   const nl=mk('div','nav-links');
-  const pb=mk('button','','Plan my trip'); pb.addEventListener('click',()=>go({page:'quiz',step:0,answers:{}}));
+  const pb=mk('button','','Plan my trip'); pb.addEventListener('click',startQuiz);
   nl.appendChild(pb);
   app.appendChild(Nav(nl));
 
@@ -647,8 +654,7 @@ function renderBrowse(app){
     filtered.forEach(p=>{
       const card=mk('div','b-card');
       const em=mk('div','b-emoji');
-      if(p.photo){em.style.backgroundImage=`url(${p.photo})`;em.style.backgroundSize='cover';em.style.backgroundPosition='center';}
-      else{em.textContent=emo(p);em.style.background=catBg(p);}
+      applyPhoto(em,p);
       const inf=mk('div','b-info');
       ap(inf,mk('div','b-name',p.name),mk('div','b-hood',`${p.neighborhood} · ${p.priceRange||'–'}`),mk('div','b-snip',p.samCommentary));
       const right=mk('div','b-right');
