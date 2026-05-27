@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'none'; script-src 'unsafe-inline'">
 <title>Sam Says Go! — Your Friend in Every City</title>
 
 <!-- Meta description -->
@@ -22,7 +23,7 @@
 <!-- Favicon: SG crest as inline SVG -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%23F0EDE6'/><circle cx='32' cy='32' r='26' fill='none' stroke='%235C5A4E' stroke-width='2.5'/><text x='32' y='39' font-family='Georgia,serif' font-size='20' font-weight='600' fill='%235C5A4E' text-anchor='middle'>SG</text></svg>">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -398,7 +399,7 @@ function PlaceCard(p){
   const meta=mk('div','place-meta',`${p.neighborhood} · ${p.subcategory||p.category}`);
   const copy=mk('div','place-copy',p.samCommentary);
   const acts=mk('div','place-acts');
-  const dir=mk('a','','Directions ↗'); dir.href=maps(p); dir.target='_blank';
+  const dir=mk('a','','Directions ↗'); dir.href=maps(p); dir.target='_blank'; dir.rel='noopener noreferrer';
   const dot=mk('span','dot','·');
   const rat=mk('span','place-rating',`⭐ ${p.googleRating} (${p.reviewCount.toLocaleString()})`);
   ap(acts,dir,dot,rat);
@@ -658,7 +659,7 @@ function renderBrowse(app){
       const inf=mk('div','b-info');
       ap(inf,mk('div','b-name',p.name),mk('div','b-hood',`${p.neighborhood} · ${p.priceRange||'–'}`),mk('div','b-snip',p.samCommentary));
       const right=mk('div','b-right');
-      const dir=mk('a','b-dir','Directions ↗'); dir.href=maps(p); dir.target='_blank';
+      const dir=mk('a','b-dir','Directions ↗'); dir.href=maps(p); dir.target='_blank'; dir.rel='noopener noreferrer';
       ap(right,mk('span','b-rating',`⭐ ${p.googleRating}`),dir);
       ap(card,em,inf,right);
       list.appendChild(card);
